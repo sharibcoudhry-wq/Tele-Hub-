@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TELE HUB | Premier Cinema & Originals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-void: #05070c;
+            --bg-surface: #0a0f18;
+            --bg-card: #101726;
+            --brand-primary: #0284c7;
+            --brand-glow: #38bdf8;
+            --accent-hot: #f43f5e;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(56, 189, 248, 0.4);
+            --ease-cinematic: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Ambient Lighting */
+        .stage-lighting {
+            position: fixed;
+            top: -250px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1000px;
+            height: 600px;
+            background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.15) 0%, rgba(5, 7, 12, 0) 75%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Top Navigation Bar */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(5, 7, 12, 0.75);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--border-glass);
+            padding: 18px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .brand-crest {
+            background: linear-gradient(135deg, #0284c7, #38bdf8);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 18px;
+            color: #05070c;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+            letter-spacing: -0.5px;
+        }
+
+        .brand-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .brand-name b {
+            color: var(--brand-glow);
+        }
+
+        .nav-tools {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .search-shell {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-shell input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            padding: 10px 18px 10px 42px;
+            border-radius: 999px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            width: 240px;
+            transition: var(--ease-cinematic);
+        }
+
+        .search-shell input:focus {
+            width: 320px;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--border-active);
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.2);
+        }
+
+        .search-icon-svg {
+            position: absolute;
+            left: 14px;
+            width: 18px;
+            height: 18px;
+            fill: var(--text-dim);
+        }
+
+        .studio-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-glass);
+            color: var(--text-main);
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+            transition: var(--ease-cinematic);
+        }
+
+        .studio-btn:hover {
+            background: var(--brand-glow);
+            color: #05070c;
+            border-color: var(--brand-glow);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+        }
+
+        /* Hero Billboard (Netflix & Hotstar Style) */
+        .billboard {
+            position: relative;
+            max-width: 1440px;
+            margin: 28px auto 48px auto;
+            padding: 0 48px;
+            z-index: 1;
+        }
+
+        .billboard-stage {
+            position: relative;
+            height: 520px;
+            border-radius: 28px;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+            padding: 56px;
+            background-size: cover;
+            background-position: center;
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.85);
+        }
+
+        .billboard-stage::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(5,7,12,0.1) 0%, rgba(5,7,12,0.8) 65%, #05070c 100%),
+                        linear-gradient(90deg, #05070c 0%, rgba(5,7,12,0.6) 50%, transparent 100%);
+        }
+
+        .billboard-info {
+            position: relative;
+            z-index: 2;
+            max-width: 680px;
+        }
+
+        .pill-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid var(--border-active);
+            border-radius: 999px;
+            color: var(--brand-glow);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .billboard-title {
+            font-size: 52px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            letter-spacing: -1.5px;
+        }
+
+        .billboard-desc {
+            color: var(--text-dim);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 28px;
+            max-width: 580px;
+        }
+
+        .btn-stream {
+            background: linear-gradient(135deg, #0284c7, #38bdf8);
+            color: #05070c;
+            border: none;
+            padding: 14px 34px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.4);
+            transition: var(--ease-cinematic);
+        }
+
+        .btn-stream:hover {
+            transform: scale(1.03);
+            box-shadow: 0 14px 40px rgba(56, 189, 248, 0.6);
+        }
+
+        /* Movie Feed & Categories */
+        main {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 48px 90px 48px;
+            position: relative;
+            z-index: 1;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-row h2 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .chip-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .genre-chip {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-glass);
+            color: var(--text-dim);
+            padding: 8px 18px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--ease-cinematic);
+        }
+
+        .genre-chip.active, .genre-chip:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            border-color: var(--border-active);
+        }
+
+        /* Cinema Cards Rail */
+        .cinema-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 30px;
+        }
+
+        .cinema-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-glass);
+            transition: var(--ease-cinematic);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .cinema-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--border-active);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .poster-frame {
+            position: relative;
+            width: 100%;
+            height: 370px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .poster-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .cinema-card:hover .poster-frame img {
+            transform: scale(1.08);
+        }
+
+        .res-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-glass);
+            color: #38bdf8;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .cinema-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(5, 7, 12, 0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--ease-cinematic);
+        }
+
+        .cinema-card:hover .cinema-overlay {
+            opacity: 1;
+        }
+
+        .play-disc {
+            width: 58px;
+            height: 58px;
+            background: var(--brand-glow);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.6);
+            transform: scale(0.8);
+            transition: var(--ease-cinematic);
+        }
+
+        .cinema-card:hover .play-disc {
+            transform: scale(1);
+        }
+
+        .play-disc svg {
+            width: 20px;
+            height: 20px;
+            fill: #05070c;
+            margin-left: 2px;
+        }
+
+        .card-meta {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-grow: 1;
+        }
+
+        .sub-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .meta-genre {
+            color: var(--brand-glow);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        .movie-name {
+            font-size: 17px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .remove-btn {
+            margin-top: 10px;
+            background: rgba(244, 63, 94, 0.12);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            color: #f43f5e;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .remove-btn:hover {
+            background: #f43f5e;
+            color: #fff;
+        }
+
+        /* Fullscreen Cinema Player Modal */
+        .cinema-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .screen-box {
+            width: 100%;
+            max-width: 1000px;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 0 80px rgba(0,0,0,0.9);
+            position: relative;
+        }
+
+        .screen-box-header {
+            padding: 16px 24px;
+            background: #0a0f18;
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .screen-title {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .screen-close {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 24px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .screen-close:hover {
+            color: #fff;
+        }
+
+        .screen-frame {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            background: #000;
+        }
+
+        .screen-frame iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Tele Studio / Creator Center Modal */
+        .studio-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .studio-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 480px;
+            padding: 36px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+        }
+
+        .studio-card h3 {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .studio-card p {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 24px;
+        }
+
+        .field-unit {
+            margin-bottom: 18px;
+        }
+
+        .field-unit label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .field-unit input, .field-unit select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            padding: 13px 16px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: var(--ease-cinematic);
+        }
+
+        .field-unit input:focus, .field-unit select:focus {
+            border-color: var(--border-active);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .btn-dismiss {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-dim);
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            flex: 1;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(135deg, #0284c7, #38bdf8);
+            color: #05070c;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 800;
+            flex: 2;
+            transition: var(--ease-cinematic);
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 16px 20px; }
+            .billboard { padding: 0 20px; margin: 16px auto 32px auto; }
+            .billboard-stage { height: 420px; padding: 24px; }
+            .billboard-title { font-size: 32px; }
+            main { padding: 0 20px 60px 20px; }
+            .search-shell input { width: 140px; }
+            .search-shell input:focus { width: 190px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stage-lighting"></div>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="brand-container" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+            <div class="brand-crest">TH</div>
+            <div class="brand-name">Tele <b>Hub</b></div>
+        </div>
+
+        <div class="nav-tools">
+            <div class="search-shell">
+                <svg class="search-icon-svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" id="filmSearch" placeholder="Search films, 4K, sci-fi..." oninput="handleSearch()">
+            </div>
+            <button class="studio-btn" onclick="openStudioModal()">
+                <span>⚙️</span> Tele Studio
+            </button>
+        </div>
+    </header>
+
+    <!-- Netflix / Hotstar Billboard Hero -->
+    <section class="billboard">
+        <div class="billboard-stage" id="heroBackdrop" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1600&auto=format&fit=crop');">
+            <div class="billboard-info">
+                <div class="pill-badge">Tele Hub Premiere</div>
+                <h1 class="billboard-title">Chronicles of Neo-Earth</h1>
+                <p class="billboard-desc">After humanity transcended physical atmosphere, an automated frequency detects life within forgotten planetary ruins.</p>
+                <button class="btn-stream" onclick="launchCinema('https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1', 'Chronicles of Neo-Earth')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                    Stream 4K
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Rail -->
+    <main>
+        <div class="filter-row">
+            <h2>Trending Originals & Exclusives</h2>
+            <div class="chip-group">
+                <div class="genre-chip active" onclick="setCategory('All', this)">All</div>
+                <div class="genre-chip" onclick="setCategory('Sci-Fi', this)">Sci-Fi</div>
+                <div class="genre-chip" onclick="setCategory('Action', this)">Action</div>
+                <div class="genre-chip" onclick="setCategory('Cinematic', this)">Cinematic</div>
+                <div class="genre-chip" onclick="setCategory('Drama', this)">Drama</div>
+            </div>
+        </div>
+
+        <div class="cinema-grid" id="cinemaRail">
+            <!-- Dynamic Real Cards Load Here -->
+        </div>
+    </main>
+
+    <!-- Fullscreen Cinema Player Modal -->
+    <div class="cinema-modal" id="cinemaPlayerModal" onclick="closePlayer(event)">
+        <div class="screen-box">
+            <div class="screen-box-header">
+                <span class="screen-title" id="screenMovieTitle">Streaming</span>
+                <button class="screen-close" onclick="forceClosePlayer()">✕</button>
+            </div>
+            <div class="screen-frame">
+                <iframe id="cinemaIframe" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tele Studio Master Panel -->
+    <div class="studio-modal" id="studioModal">
+        <div class="studio-card" id="studioAuth">
+            <h3>Tele Studio Security</h3>
+            <p>Enter Master Key to access network broadcasting operations.</p>
+            <div class="field-unit">
+                <label>Security Key</label>
+                <input type="password" id="studioAuthKey" placeholder="Default Master Key: 1234">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-dismiss" onclick="closeStudioModal()">Cancel</button>
+                <button class="btn-confirm" onclick="authorizeStudio()">Authorize</button>
+            </div>
+        </div>
+
+        <div class="studio-card" id="studioWorkstation" style="display: none;">
+            <h3>Deploy Film to Tele Hub</h3>
+            <p>Enter high-resolution metadata to publish to the global rail.</p>
+            <div class="field-unit">
+                <label>Title</label>
+                <input type="text" id="inputTitle" placeholder="e.g. Cyber Nexus">
+            </div>
+            <div class="field-unit">
+                <label>Genre</label>
+                <select id="inputGenre">
+                    <option value="Sci-Fi">Sci-Fi</option>
+                    <option value="Action">Action</option>
+                    <option value="Cinematic">Cinematic</option>
+                    <option value="Drama">Drama</option>
+                </select>
+            </div>
+            <div class="field-unit">
+                <label>Poster Image URL</label>
+                <input type="url" id="inputPoster" placeholder="https://images.unsplash.com/...">
+            </div>
+            <div class="field-unit">
+                <label>Stream / Video URL (YouTube or Direct)</label>
+                <input type="text" id="inputVideo" placeholder="https://youtube.com/watch?v=...">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-dismiss" onclick="closeStudioModal()">Exit</button>
+                <button class="btn-confirm" onclick="dispatchMovie()">Broadcast Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const initialFleet = [
+            {
+                id: 101,
+                title: "Chronicles of Neo-Earth",
+                genre: "Sci-Fi",
+                badge: "4K HDR",
+                year: "2026",
+                poster: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&auto=format&fit=crop",
+                video: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+            },
+            {
+                id: 102,
+                title: "Redline Horizon",
+                genre: "Action",
+                badge: "IMAX",
+                year: "2026",
+                poster: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&auto=format&fit=crop",
+                video: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+            },
+            {
+                id: 103,
+                title: "Ghost in the Valley",
+                genre: "Cinematic",
+                badge: "4K",
+                year: "2026",
+                poster: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=800&auto=format&fit=crop",
+                video: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+            },
+            {
+                id: 104,
+                title: "Orbital Mirage",
+                genre: "Sci-Fi",
+                badge: "4K ULTRA",
+                year: "2026",
+                poster: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800&auto=format&fit=crop",
+                video: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+            }
+        ];
+
+        let fleet = JSON.parse(localStorage.getItem('telehub_production_db')) || initialFleet;
+        let selectedGenre = 'All';
+
+        function renderFleet(dataSet = fleet) {
+            const rail = document.getElementById('cinemaRail');
+            rail.innerHTML = '';
+
+            let list = dataSet;
+            if (selectedGenre !== 'All') {
+                list = list.filter(item => item.genre === selectedGenre);
+            }
+
+            if (list.length === 0) {
+                rail.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-dim); padding: 60px;">No titles found in this category.</p>`;
+                return;
+            }
+
+            const isAdmin = sessionStorage.getItem('th_admin_session') === 'true';
+
+            list.forEach(movie => {
+                rail.innerHTML += `
+                    <div class="cinema-card" onclick="launchCinema('${formatStream(movie.video)}', '${cleanTitle(movie.title)}')">
+                        <div class="poster-frame">
+                            <span class="res-badge">${movie.badge || '4K'}</span>
+                            <img src="${movie.poster}" alt="${movie.title}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&auto=format&fit=crop'">
+                            <div class="cinema-overlay">
+                                <div class="play-disc">
+                                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-meta">
+                            <div class="sub-meta">
+                                <span class="meta-genre">${movie.genre}</span>
+                                <span>${movie.year || '2026'}</span>
+                            </div>
+                            <div class="movie-name" title="${movie.title}">${movie.title}</div>
+                            ${isAdmin ? `<button class="remove-btn" onclick="event.stopPropagation(); removeMovie(${movie.id})">Delete from Hub</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function formatStream(link) {
+            if (!link) return '';
+            if (link.includes('watch?v=')) {
+                return link.replace('watch?v=', 'embed/') + '?autoplay=1';
+            }
+            if (link.includes('youtu.be/')) {
+                return link.replace('youtu.be/', 'www.youtube.com/embed/') + '?autoplay=1';
+            }
+            return link;
+        }
+
+        function cleanTitle(str) {
+            return str.replace(/'/g, "\\'");
+        }
+
+        /* Fullscreen Player System */
+        function launchCinema(url, title) {
+            document.getElementById('screenMovieTitle').innerText = title;
+            document.getElementById('cinemaIframe').src = url;
+            document.getElementById('cinemaPlayerModal').style.display = 'flex';
+        }
+
+        function forceClosePlayer() {
+            document.getElementById('cinemaIframe').src = '';
+            document.getElementById('cinemaPlayerModal').style.display = 'none';
+        }
+
+        function closePlayer(e) {
+            if (e.target.id === 'cinemaPlayerModal') {
+                forceClosePlayer();
+            }
+        }
+
+        /* Filter & Search Engine */
+        function setCategory(genre, el) {
+            selectedGenre = genre;
+            document.querySelectorAll('.genre-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            renderFleet();
+        }
+
+        function handleSearch() {
+            const q = document.getElementById('filmSearch').value.toLowerCase();
+            const matched = fleet.filter(item => 
+                item.title.toLowerCase().includes(q) || 
+                item.genre.toLowerCase().includes(q)
+            );
+            renderFleet(matched);
+        }
+
+        /* Studio Master Operations */
+        function openStudioModal() {
+            const isAdmin = sessionStorage.getItem('th_admin_session') === 'true';
+            document.getElementById('studioModal').style.display = 'flex';
+            if (isAdmin) {
+                document.getElementById('studioAuth').style.display = 'none';
+                document.getElementById('studioWorkstation').style.display = 'block';
+            } else {
+                document.getElementById('studioAuth').style.display = 'block';
+                document.getElementById('studioWorkstation').style.display = 'none';
+            }
+        }
+
+        function closeStudioModal() {
+            document.getElementById('studioModal').style.display = 'none';
+            document.getElementById('studioAuthKey').value = '';
+        }
+
+        function authorizeStudio() {
+            const key = document.getElementById('studioAuthKey').value;
+            if (key === '1234') { // Secret Master Password
+                sessionStorage.setItem('th_admin_session', 'true');
+                document.getElementById('studioAuth').style.display = 'none';
+                document.getElementById('studioWorkstation').style.display = 'block';
+                renderFleet();
+            } else {
+                alert('Tele Studio Security: Master Key Invalid.');
+            }
+        }
+
+        function dispatchMovie() {
+            const title = document.getElementById('inputTitle').value.trim();
+            const genre = document.getElementById('inputGenre').value;
+            const poster = document.getElementById('inputPoster').value.trim();
+            const video = document.getElementById('inputVideo').value.trim();
+
+            if (!title || !poster || !video) {
+                alert('Please provide complete title, poster asset, and stream URL.');
+                return;
+            }
+
+            const payload = {
+                id: Date.now(),
+                title: title,
+                genre: genre,
+                badge: '4K ULTRA',
+                year: '2026',
+                poster: poster,
+                video: video
+            };
+
+            fleet.unshift(payload);
+            localStorage.setItem('telehub_production_db', JSON.stringify(fleet));
+
+            document.getElementById('inputTitle').value = '';
+            document.getElementById('inputPoster').value = '';
+            document.getElementById('inputVideo').value = '';
+
+            closeStudioModal();
+            renderFleet();
+        }
+
+        function removeMovie(id) {
+            if (confirm('Tele Studio: Confirm permanent deletion of this film?')) {
+                fleet = fleet.filter(item => item.id !== id);
+                localStorage.setItem('telehub_production_db', JSON.stringify(fleet));
+                renderFleet();
+            }
+        }
+
+        renderFleet();
+    </script>
+</body>
+</html>
